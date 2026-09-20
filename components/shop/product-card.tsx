@@ -5,12 +5,21 @@ import Link from "next/link";
 import { Heart, ShoppingCart } from "lucide-react";
 
 import { useAddToCart } from "@/lib/query/cart/use-cart-hooks";
-import type { Product } from "@/lib/query/products/product-types";
+import type {
+  Product,
+  RelatedProduct,
+} from "@/lib/query/products/product-types";
 
 import { Button } from "@/components/ui/button";
 
+// ============================================================
+// PRODUCT TYPE
+// ============================================================
+
+type ProductCardProduct = Product | RelatedProduct;
+
 type ProductCardProps = {
-  product: Product;
+  product: ProductCardProduct;
 };
 
 // ============================================================
@@ -29,9 +38,7 @@ function formatPrice(price: string) {
 // PRODUCT CARD
 // ============================================================
 
-export function ProductCard({
-  product,
-}: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   // ==========================================================
   // ADD TO CART
   // ==========================================================
@@ -43,9 +50,7 @@ export function ProductCard({
   // ==========================================================
 
   const primaryImage =
-    product.images.find(
-      (image) => image.isPrimary,
-    ) ?? product.images[0];
+    product.images.find((image) => image.isPrimary) ?? product.images[0];
 
   // ==========================================================
   // DISCOUNT
@@ -53,11 +58,9 @@ export function ProductCard({
 
   const discount =
     product.compareAtPrice &&
-    Number(product.compareAtPrice) >
-      Number(product.price)
+    Number(product.compareAtPrice) > Number(product.price)
       ? Math.round(
-          ((Number(product.compareAtPrice) -
-            Number(product.price)) /
+          ((Number(product.compareAtPrice) - Number(product.price)) /
             Number(product.compareAtPrice)) *
             100,
         )
@@ -85,7 +88,9 @@ export function ProductCard({
       ====================================================== */}
 
       <div className="relative aspect-square bg-white p-3">
-        {/* NEW ARRIVAL */}
+        {/* ====================================================
+            PRODUCT BADGE
+        ==================================================== */}
 
         {product.isNewArrival && (
           <span className="absolute left-2 top-2 z-10 rounded bg-[#16A34A] px-2 py-1 text-[9px] font-semibold text-white">
@@ -93,26 +98,24 @@ export function ProductCard({
           </span>
         )}
 
-        {/* BEST SELLER */}
+        {!product.isNewArrival && product.isBestSeller && (
+          <span className="absolute left-2 top-2 z-10 rounded bg-orange-500 px-2 py-1 text-[9px] font-semibold text-white">
+            Best Seller
+          </span>
+        )}
 
         {!product.isNewArrival &&
-          product.isBestSeller && (
-            <span className="absolute left-2 top-2 z-10 rounded bg-orange-500 px-2 py-1 text-[9px] font-semibold text-white">
-              Best Seller
-            </span>
-          )}
-
-        {/* FEATURED */}
-
-        {product.isFeatured &&
-          !product.isNewArrival &&
-          !product.isBestSeller && (
+          !product.isBestSeller &&
+          "isFeatured" in product &&
+          product.isFeatured && (
             <span className="absolute left-2 top-2 z-10 rounded bg-[#2563EB] px-2 py-1 text-[9px] font-semibold text-white">
               Featured
             </span>
           )}
 
-        {/* WISHLIST */}
+        {/* ====================================================
+            WISHLIST BUTTON
+        ==================================================== */}
 
         <button
           type="button"
@@ -122,7 +125,9 @@ export function ProductCard({
           <Heart className="h-3.5 w-3.5" />
         </button>
 
-        {/* PRODUCT IMAGE */}
+        {/* ====================================================
+            PRODUCT IMAGE
+        ==================================================== */}
 
         <Link
           href={`/products/${product.slug}`}
@@ -130,13 +135,9 @@ export function ProductCard({
         >
           <Image
             src={
-              primaryImage?.url ??
-              "/images/products/product-placeholder.jpg"
+              primaryImage?.url ?? "/images/products/product-placeholder.jpg"
             }
-            alt={
-              primaryImage?.altText ??
-              product.name
-            }
+            alt={primaryImage?.altText ?? product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 20vw"
             className="object-contain p-7 transition-transform duration-300 group-hover:scale-105"
@@ -149,15 +150,17 @@ export function ProductCard({
       ====================================================== */}
 
       <div className="px-3 pb-3">
-        {/* BRAND */}
+        {/* ====================================================
+            BRAND
+        ==================================================== */}
 
         {product.brand && (
-          <p className="mb-1 text-[9px] text-[#94A3B8]">
-            {product.brand.name}
-          </p>
+          <p className="mb-1 text-[9px] text-[#94A3B8]">{product.brand.name}</p>
         )}
 
-        {/* PRODUCT NAME */}
+        {/* ====================================================
+            PRODUCT NAME
+        ==================================================== */}
 
         <Link href={`/products/${product.slug}`}>
           <h3 className="line-clamp-2 min-h-8 text-xs font-medium leading-4 text-[#0F172A] transition-colors hover:text-[#2563EB]">
@@ -165,7 +168,9 @@ export function ProductCard({
           </h3>
         </Link>
 
-        {/* PRICE */}
+        {/* ====================================================
+            PRICE
+        ==================================================== */}
 
         <div className="mt-2 flex items-center justify-between gap-2">
           <p className="text-sm font-bold text-[#0F172A]">
@@ -173,17 +178,16 @@ export function ProductCard({
           </p>
 
           {product.compareAtPrice &&
-            Number(product.compareAtPrice) >
-              Number(product.price) && (
+            Number(product.compareAtPrice) > Number(product.price) && (
               <p className="text-[9px] text-[#94A3B8] line-through">
-                {formatPrice(
-                  product.compareAtPrice,
-                )}
+                {formatPrice(product.compareAtPrice)}
               </p>
             )}
         </div>
 
-        {/* DISCOUNT */}
+        {/* ====================================================
+            DISCOUNT
+        ==================================================== */}
 
         {discount !== null && (
           <p className="mt-1 text-[9px] font-medium text-green-600">
@@ -191,22 +195,33 @@ export function ProductCard({
           </p>
         )}
 
-        {/* ADD TO CART */}
+        {/* ====================================================
+            STOCK STATUS
+        ==================================================== */}
+
+        {product.stockStatus === "low_stock" && (
+          <p className="mt-1 text-[9px] font-medium text-orange-500">
+            Only {product.stock} left
+          </p>
+        )}
+
+        {/* ====================================================
+            ADD TO CART
+        ==================================================== */}
 
         <Button
           type="button"
           onClick={handleAddToCart}
           disabled={
             addToCartMutation.isPending ||
-            product.stockStatus ===
-              "out_of_stock"
+            product.stockStatus === "out_of_stock" ||
+            product.stock <= 0
           }
           className="mt-3 h-8 w-full rounded-md bg-[#2563EB] text-[10px] font-semibold hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <ShoppingCart className="mr-1.5 h-3 w-3" />
 
-          {product.stockStatus ===
-          "out_of_stock"
+          {product.stockStatus === "out_of_stock" || product.stock <= 0
             ? "Out of Stock"
             : addToCartMutation.isPending
               ? "Adding..."

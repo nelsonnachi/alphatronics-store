@@ -3,12 +3,12 @@ import {
   Truck,
 } from "lucide-react";
 
-import type { Product } from "@/lib/query/products/product-types";
+import type { ProductDetails } from "@/lib/query/products/product-types";
 
 import { ProductActions } from "./product-actions";
 
 type ProductInformationProps = {
-  product: Product;
+  product: ProductDetails;
 };
 
 export function ProductInformation({

@@ -14,9 +14,9 @@ type RelatedProductsProps = {
 export function RelatedProducts({
   slug,
 }: RelatedProductsProps) {
-  // ==========================================================
-  // GET RELATED PRODUCTS
-  // ==========================================================
+  // ============================================================
+  // GET RELATED PRODUCTS FROM API
+  // ============================================================
 
   const {
     data,
@@ -24,15 +24,15 @@ export function RelatedProducts({
     isError,
   } = useRelatedProducts(slug);
 
-  // ==========================================================
-  // PRODUCTS
-  // ==========================================================
+  // ============================================================
+  // GET PRODUCTS FROM API RESPONSE
+  // ============================================================
 
   const relatedProducts = data?.data ?? [];
 
-  // ==========================================================
+  // ============================================================
   // LOADING
-  // ==========================================================
+  // ============================================================
 
   if (isLoading) {
     return (
@@ -52,25 +52,25 @@ export function RelatedProducts({
     );
   }
 
-  // ==========================================================
-  // ERROR
-  // ==========================================================
+  // ============================================================
+  // API ERROR
+  // ============================================================
 
   if (isError) {
     return null;
   }
 
-  // ==========================================================
+  // ============================================================
   // NO RELATED PRODUCTS
-  // ==========================================================
+  // ============================================================
 
   if (relatedProducts.length === 0) {
     return null;
   }
 
-  // ==========================================================
-  // RENDER
-  // ==========================================================
+  // ============================================================
+  // RENDER RELATED PRODUCTS
+  // ============================================================
 
   return (
     <section className="mt-14">
@@ -83,7 +83,7 @@ export function RelatedProducts({
 
         <Link
           href="/shop"
-          className="flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] sm:text-xs"
+          className="flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] transition-colors hover:text-[#1D4ED8] sm:text-xs"
         >
           View All
 
@@ -91,7 +91,7 @@ export function RelatedProducts({
         </Link>
       </div>
 
-      {/* PRODUCTS */}
+      {/* RELATED PRODUCTS */}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {relatedProducts.map((product) => (

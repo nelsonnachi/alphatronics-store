@@ -4,10 +4,11 @@ import type { ProductDetails as ProductDetailsType } from "@/lib/query/products/
 
 import { RelatedProducts } from "@/components/shop/related-products";
 
+import { CustomerService } from "../customer-service/customer-service";
+
 import { ProductGallery } from "./product-gallery";
 import { ProductInformation } from "./product-information";
 import { ProductSpecifications } from "./product-specifications";
-import { CustomerService } from "../customer-service/customer-service";
 
 type ProductDetailsProps = {
   product: ProductDetailsType;
@@ -19,33 +20,38 @@ export function ProductDetails({
   return (
     <main className="bg-[#F8FAFC]">
       <div className="mx-auto max-w-360 px-4 py-6 sm:px-6 sm:py-8">
-        {/* ====================================================
-            BREADCRUMB
-        ==================================================== */}
+
+        {/* BREADCRUMB */}
 
         <div className="mb-6 flex flex-wrap items-center gap-2 text-xs text-[#64748B]">
-          <Link href="/">
+          <Link
+            href="/"
+            className="transition-colors hover:text-[#2563EB]"
+          >
             Home
           </Link>
 
           <span>/</span>
 
-          <Link
-            href={`/shop?category=${product.category.slug}`}
-          >
-            {product.category.name}
-          </Link>
+          {product.category && (
+            <>
+              <Link
+                href={`/shop?category=${product.category.slug}`}
+                className="transition-colors hover:text-[#2563EB]"
+              >
+                {product.category.name}
+              </Link>
 
-          <span>/</span>
+              <span>/</span>
+            </>
+          )}
 
           <span className="font-medium text-[#0F172A]">
             {product.name}
           </span>
         </div>
 
-        {/* ====================================================
-            MAIN PRODUCT AREA
-        ==================================================== */}
+        {/* MAIN PRODUCT AREA */}
 
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
           <ProductGallery
@@ -53,16 +59,13 @@ export function ProductDetails({
             productName={product.name}
           />
 
-          <ProductInformation
-            product={product}
-          />
+          <ProductInformation product={product} />
         </div>
 
-        {/* ====================================================
-            LOWER INFORMATION
-        ==================================================== */}
+        {/* LOWER INFORMATION */}
 
         <div className="mt-10 space-y-8 rounded-xl border border-[#E2E8F0] bg-white p-5 sm:p-8">
+
           {/* PRODUCT DESCRIPTION */}
 
           <section>
@@ -70,32 +73,30 @@ export function ProductDetails({
               Product Description
             </h2>
 
-            <p className="mt-4 max-w-4xl text-sm leading-7 text-[#64748B]">
-              {product.description}
-            </p>
+            {product.description ? (
+              <p className="mt-4 max-w-4xl text-sm leading-7 text-[#64748B]">
+                {product.description}
+              </p>
+            ) : (
+              <p className="mt-4 text-sm text-[#64748B]">
+                No product description is available.
+              </p>
+            )}
           </section>
 
           {/* PRODUCT SPECIFICATIONS */}
 
           <ProductSpecifications
-            specifications={
-              product.specifications
-            }
+            specifications={product.specifications}
           />
         </div>
 
-        {/* ====================================================
-            RELATED PRODUCTS
-        ==================================================== */}
+        {/* RELATED PRODUCTS */}
 
-        <RelatedProducts
-          slug={product.slug}
-        />
+        <RelatedProducts slug={product.slug} />
       </div>
 
-      {/* ====================================================
-          CUSTOMER SERVICE
-      ==================================================== */}
+      {/* CUSTOMER SERVICE */}
 
       <CustomerService />
     </main>
