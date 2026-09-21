@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { useRelatedProducts } from "@/lib/query/products/product-hooks";
 
 import { ProductCard } from "./product-card";
+import { ProductCardSkeleton } from "../storefront/products/product-section-skeleton";
 
 type RelatedProductsProps = {
   slug: string;
@@ -37,16 +38,20 @@ export function RelatedProducts({
   if (isLoading) {
     return (
       <section className="mt-14">
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="text-base font-bold text-[#0F172A] sm:text-lg">
-            You May Also Like
-          </h2>
+        {/* HEADER */}
+
+        <div className="mb-4 flex items-center justify-between">
+          <SkeletonTitle />
+
+          <SkeletonViewAll />
         </div>
 
-        <div className="rounded-lg border border-[#E2E8F0] bg-white p-8 text-center">
-          <p className="text-xs text-[#64748B]">
-            Loading related products...
-          </p>
+        {/* PRODUCT SKELETONS */}
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <ProductCardSkeleton key={index} />
+          ))}
         </div>
       </section>
     );
@@ -102,5 +107,21 @@ export function RelatedProducts({
         ))}
       </div>
     </section>
+  );
+}
+
+// ============================================================
+// SKELETON HEADER
+// ============================================================
+
+function SkeletonTitle() {
+  return (
+    <div className="h-5 w-36 animate-pulse rounded-md bg-[#E2E8F0] sm:h-6 sm:w-44" />
+  );
+}
+
+function SkeletonViewAll() {
+  return (
+    <div className="h-4 w-14 animate-pulse rounded-md bg-[#E2E8F0] sm:w-16" />
   );
 }

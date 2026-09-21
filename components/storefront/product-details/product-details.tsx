@@ -2,13 +2,13 @@ import Link from "next/link";
 
 import type { ProductDetails as ProductDetailsType } from "@/lib/query/products/product-types";
 
-import { RelatedProducts } from "@/components/shop/related-products";
 
 import { CustomerService } from "../customer-service/customer-service";
 
 import { ProductGallery } from "./product-gallery";
 import { ProductInformation } from "./product-information";
 import { ProductSpecifications } from "./product-specifications";
+import { RelatedProducts } from "@/components/shop/related-products";
 
 type ProductDetailsProps = {
   product: ProductDetailsType;

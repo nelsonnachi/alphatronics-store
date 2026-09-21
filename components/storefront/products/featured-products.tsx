@@ -6,6 +6,7 @@ import { ArrowRight, Crown } from "lucide-react";
 import { useProducts } from "@/lib/query/products/product-hooks";
 
 import { ProductCard } from "./product-card";
+import { ProductSectionSkeleton } from "./product-section-skeleton";
 
 export function FeaturedProducts() {
   // ==========================================================
@@ -33,25 +34,7 @@ export function FeaturedProducts() {
   // ==========================================================
 
   if (isLoading) {
-    return (
-      <section className="bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
-          <div className="mb-4 flex items-center gap-2">
-            <Crown className="h-4 w-4 text-[#2563EB]" />
-
-            <h2 className="text-base font-bold text-[#0F172A] sm:text-lg">
-              Featured Products
-            </h2>
-          </div>
-
-          <div className="rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-8 text-center">
-            <p className="text-xs text-[#64748B]">
-              Loading featured products...
-            </p>
-          </div>
-        </div>
-      </section>
-    );
+    return <ProductSectionSkeleton variant="featured" />;
   }
 
   // ==========================================================

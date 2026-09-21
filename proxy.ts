@@ -1,9 +1,10 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-
-const isAdminPage = createRouteMatcher(["/admin(.*)"]);
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isAdminPage(req)) {
+  const pathname = req.nextUrl.pathname;
+
+  // Protect admin pages
+  if (pathname.startsWith("/admin")) {
     await auth.protect();
   }
 });
